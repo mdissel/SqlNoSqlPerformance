@@ -1,1 +1,1 @@
-Rename the example.env to .end and update the connectionstring to run the application
+Rename the example.env to .env and update the connectionstring to run the application
