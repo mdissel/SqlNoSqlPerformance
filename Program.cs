@@ -2,7 +2,7 @@
 using BenchmarkDotNet.Running;
 DotNetEnv.Env.TraversePath().Load(); 
 Console.WriteLine("SqlNoSqlPerformance");
-var noSql = new SqlNoSqlPerformance.NoSql();
+var noSql = new SqlNoSqlPerformance.MartenDb.NoSql();
 await noSql.InitializeAsync();
 await noSql.Insert();
 //await noSql.InsertBatch();

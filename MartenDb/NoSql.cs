@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SqlNoSqlPerformance
+namespace SqlNoSqlPerformance.MartenDb
 {
 	public class NoSql : IDisposable
 	{
@@ -76,6 +76,9 @@ namespace SqlNoSqlPerformance
 				options.Connection(DotNetEnv.Env.GetString("CONNECTIONSTRING"));
 				options.AutoCreateSchemaObjects = AutoCreate.All;
 				options.DatabaseSchemaName = "public";
+#if DEBUG
+				options.Logger(new ConsoleMartenLogger());
+#endif
 			});
 		}
 
@@ -84,12 +87,12 @@ namespace SqlNoSqlPerformance
 		public async Task InitializeAsync()
 		{
 			await _documentStore.Advanced.Clean.DeleteAllDocumentsAsync();
-			Bogus.Faker<Country> countryFaker = new Bogus.Faker<Country>()
+			Faker<Country> countryFaker = new Faker<Country>()
 				.RuleFor(o => o.Code, f => f.Address.CountryCode())
 				.RuleFor(o => o.Name, f => f.Address.Country());
 			await _documentStore.BulkInsertAsync(countryFaker.Generate(5));
 
-			var tagFaker = new Bogus.Faker<Tag>()
+			var tagFaker = new Faker<Tag>()
 				.RuleFor(o => o.Code, f => f.Random.AlphaNumeric(5).ToUpper())
 				.RuleFor(o => o.Name, f => f.Commerce.ProductName());
 			await _documentStore.BulkInsertAsync(tagFaker.Generate(50));
@@ -150,17 +153,11 @@ namespace SqlNoSqlPerformance
 
 		private static Company CreateCompany(Random randomAddress, int i)
 		{
-			Bogus.Faker<Company> faker = new Faker<Company>()
+			Faker<Company> faker = new Faker<Company>()
 				.RuleFor(o => o.Name, f => f.Company.CompanyName());
 			var company = faker.Generate();
-			for (int j = 0; j < randomAddress.Next(1, 4); j++)
-			{
-				company.Addresses.Add(new Address.AddressFaker().Generate());
-			}
-			for (int j = 0; j < randomAddress.Next(1, 6); j++)
-			{
-				company.Tags.Add(randomAddress.Next(1, 50));
-			}
+			company.Addresses.AddRange(new Address.AddressFaker().GenerateBetween(1,4));
+			company.Tags.AddRange(Enumerable.Range(1, 10).Select(x => (long)randomAddress.Next(1, 50)).Distinct().ToList());
 			return company;
 		}
 	}
