@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace SqlNoSqlPerformance.MartenDb
 {
+
 	public class NoSql : IDisposable
 	{
 
@@ -18,7 +19,7 @@ namespace SqlNoSqlPerformance.MartenDb
 		{
 
 			public long Id { get; set; }
-			public string Name { get; set; }
+			public string? Name { get; set; }
 			public List<Address> Addresses { get; set; } = new List<Address>();
 			public List<long> Tags { get; set; } = new List<long>();
 
@@ -46,25 +47,25 @@ namespace SqlNoSqlPerformance.MartenDb
 
 				}
 			}
-			public string Street { get; set; }
-			public string City { get; set; }
-			public string State { get; set; }
-			public string ZipCode { get; set; }
+			public string? Street { get; set; }
+			public string? City { get; set; }
+			public string? State { get; set; }
+			public string? ZipCode { get; set; }
 			public long CountryId { get; set; }
 		}
 
 		public class Country
 		{
 			public long Id { get; set; }
-			public string Code { get; set; }
-			public string Name { get; set; }
+			public string? Code { get; set; }
+			public string? Name { get; set; }
 		}
 
 		public class Tag
 		{
 			public long Id { get; set; }
-			public string Code { get; set; }
-			public string Name { get; set; }
+			public string? Code { get; set; }
+			public string? Name { get; set; }
 		}
 
 
@@ -97,6 +98,12 @@ namespace SqlNoSqlPerformance.MartenDb
 				.RuleFor(o => o.Name, f => f.Commerce.ProductName());
 			await _documentStore.BulkInsertAsync(tagFaker.Generate(50));
 		}
+
+		//[IterationSetup]
+		//public async void IterationSetup()
+		//{
+		//	await _documentStore.Advanced.Clean.DeleteDocumentsByTypeAsync(typeof(Company));
+		//}
 
 		public void Dispose()
 		{
@@ -145,8 +152,8 @@ namespace SqlNoSqlPerformance.MartenDb
 				.Take(top)
 				.OrderBy(x => x.Name)
 				.ToList();
-			Console.WriteLine($"Countries: {dict.Count}");
-			Console.WriteLine($"Tags: {tags.Count}");
+			//Console.WriteLine($"Countries: {dict.Count}");
+			//Console.WriteLine($"Tags: {tags.Count}");
 		}
 
 
