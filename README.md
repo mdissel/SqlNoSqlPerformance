@@ -6,7 +6,7 @@ Using the [Neon](https://neon.com) free tier (min 1 vCPU, 4 GB RAM and max 2 vCP
 
 Monitoring during the benchmarks shows that the CPU is not fully utilized, so there is room for improvement.
 
-[img src="https://github.com/mdissel/SqlNoSqlPerformance/blob/master/img/monitor.png"]
+![Monitor](img/monitor.png)
 
 [Marten](https://martendb.io) 8.3 with NoSql design, see [code](https://github.com/mdissel/SqlNoSqlPerformance/blob/master/MartenDb/NoSql.cs).
 ```
@@ -28,3 +28,7 @@ BenchmarkDotNet v0.15.2, Windows 11 (10.0.26100.4484/24H2/2024Update/HudsonValle
 
 Entity Framework 9.0.3 with relational design, see [code](https://github.com/mdissel/SqlNoSqlPerformance/blob/master/EF/EF.cs).
 
+| Method             | Mean         | Error         | StdDev        | Median       |
+|------------------- |-------------:|--------------:|--------------:|-------------:|
+| Insert             | 42,408.45 ms | 11,858.474 ms | 34,778.853 ms | 34,926.92 ms |
+| SelectWithIncludes |     14.32 ms |      0.286 ms |      0.769 ms |     13.88 ms |
