@@ -117,7 +117,7 @@ namespace SqlNoSqlPerformance.MartenDb
 			using var session = _documentStore.LightweightSession();
 			for (int i = 0; i < 1000; i++)
 			{
-				Company company = CreateCompany(randomAddress, i);
+				Company company = CreateCompany(randomAddress);
 				session.Store(company);
 			}
 			await session.SaveChangesAsync();
@@ -131,7 +131,7 @@ namespace SqlNoSqlPerformance.MartenDb
 			var docs = new List<Company>();
 			for (int i = 0; i < 1000; i++)
 			{
-				Company company = CreateCompany(randomAddress, i);
+				Company company = CreateCompany(randomAddress);
 				docs.Add(company);
 			}
 			await _documentStore.BulkInsertAsync(docs);
@@ -144,7 +144,7 @@ namespace SqlNoSqlPerformance.MartenDb
 			using var session = _documentStore.LightweightSession();
 			var dict = new Dictionary<long, Country>();
 			var tags = new Dictionary<long, Tag>();
-			var top = random.Next(1, 1000);
+			var top = 150;
 			var _ = session.Query<Company>()
 				.Where(x => x.Id > 0)
 				.Include(dict).On(x => x.CountryIds)
@@ -158,7 +158,7 @@ namespace SqlNoSqlPerformance.MartenDb
 
 
 
-		private static Company CreateCompany(Random randomAddress, int i)
+		private static Company CreateCompany(Random randomAddress)
 		{
 			Faker<Company> faker = new Faker<Company>()
 				.RuleFor(o => o.Name, f => f.Company.CompanyName());
